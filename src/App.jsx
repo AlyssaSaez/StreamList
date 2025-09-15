@@ -18,7 +18,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <footer className="footer">Streamlist</footer>
+      <footer className="footer">© StreamList</footer>
     </div>
   );
 }
