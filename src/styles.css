@@ -231,3 +231,41 @@ input:focus{
 @media (prefers-reduced-motion: reduce){
   *{ animation: none !important; transition: none !important; }
 }
+
+/* small icon button */
+.icon-btn{
+  display:inline-flex; 
+  align-items:center; 
+  justify-content:center;
+  width:38px; 
+  height:38px; 
+  border-radius:10px;
+  border:1px solid var(--stroke); 
+  background:#0f2017; 
+  color: var(--accent-2); /* bright mint green by default */
+  transition: transform .1s ease, border-color .12s ease, background .12s ease, color .12s ease;
+}
+
+/* subtle lift */
+.icon-btn:hover{ 
+  transform: translateY(-1px); 
+  border-color:#3c7a54; 
+  background:#13261d; 
+  color: var(--accent); /* brighter green on hover */
+}
+
+/* delete (danger) style */
+.icon-btn.danger{
+  color: #ff6b6b;              /* red icon by default */
+  border-color: #663333;
+}
+.icon-btn.danger:hover{ 
+  border-color:#ff6b6b; 
+  background:#2a1414; 
+  color:#ff8c8c;              /* lighter red on hover */
+}
+
+/* completed check gets green */
+.icon-btn[aria-pressed="true"]{
+  color: #42d38e;              /* glowing green when active */
+}
