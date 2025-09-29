@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 function uid() {
   return Math.random().toString(36).slice(2, 9);
@@ -6,18 +7,8 @@ function uid() {
 
 export default function StreamList() {
   const [item, setItem] = useState("");
-  const [items, setItems] = useState(() => {
-    try {
-      const raw = localStorage.getItem("streamlist-items");
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  });
 
-  useEffect(() => {
-    localStorage.setItem("streamlist-items", JSON.stringify(items));
-  }, [items]);
+  const [items, setItems] = useLocalStorage("streamlist-items", []);
 
   const remaining = useMemo(
     () => items.filter((i) => !i.completed).length,
@@ -36,7 +27,7 @@ export default function StreamList() {
     };
     console.log("StreamList input:", trimmed);
     setItems((prev) => [newItem, ...prev]);
-    setItem(""); 
+    setItem(""); // clear input
   }
 
   function toggleComplete(id) {
@@ -190,7 +181,6 @@ export default function StreamList() {
     </section>
   );
 }
-
 
 function EditInline({ initial, onCancel, onSave }) {
   const [val, setVal] = useState(initial);
