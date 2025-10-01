@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import EditInline from "../components/EditInline";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 function uid() {
@@ -50,9 +51,7 @@ export default function StreamList() {
     const t = newText.trim();
     if (!t) return cancelEdit();
     setItems((prev) =>
-      prev.map((it) =>
-        it.id === id ? { ...it, text: t, editing: false } : it
-      )
+      prev.map((it) => (it.id === id ? { ...it, text: t, editing: false } : it))
     );
   }
 
@@ -84,7 +83,13 @@ export default function StreamList() {
       </form>
 
       {/* Toolbar */}
-      <div style={{ display: "flex", justifyContent: "space-between", marginTop: ".75rem" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginTop: ".75rem",
+        }}
+      >
         <span className="muted">
           {remaining === 0 ? "Nice! All caught up!" : `${remaining} remaining`}
         </span>
@@ -104,16 +109,24 @@ export default function StreamList() {
       {/* List */}
       <ul className="list" style={{ marginTop: "1rem" }}>
         {items.length === 0 && (
-          <li className="list-item muted">No items yet. Add your first pick.</li>
+          <li className="list-item muted">
+            No items yet. Add your first pick.
+          </li>
         )}
 
         {items.map((it) => (
-          <li key={it.id} className="list-item" style={{ alignItems: "stretch" }}>
+          <li
+            key={it.id}
+            className="list-item"
+            style={{ alignItems: "stretch" }}
+          >
             {/* Complete toggle */}
             <button
               type="button"
               className="icon-btn"
-              title={it.completed ? "Mark as not completed" : "Mark as completed"}
+              title={
+                it.completed ? "Mark as not completed" : "Mark as completed"
+              }
               onClick={() => toggleComplete(it.id)}
               aria-pressed={it.completed}
             >
@@ -123,7 +136,14 @@ export default function StreamList() {
             </button>
 
             {/* Text or edit field */}
-            <div style={{ display: "flex", flex: 1, alignItems: "center", gap: ".5rem" }}>
+            <div
+              style={{
+                display: "flex",
+                flex: 1,
+                alignItems: "center",
+                gap: ".5rem",
+              }}
+            >
               {it.editing ? (
                 <EditInline
                   initial={it.text}
@@ -168,7 +188,12 @@ export default function StreamList() {
               </div>
             ) : (
               <div style={{ display: "flex", gap: ".35rem" }}>
-                <button type="button" className="icon-btn" onClick={cancelEdit} title="Cancel">
+                <button
+                  type="button"
+                  className="icon-btn"
+                  onClick={cancelEdit}
+                  title="Cancel"
+                >
                   <span className="material-symbols-outlined" aria-hidden>
                     close
                   </span>
@@ -182,33 +207,33 @@ export default function StreamList() {
   );
 }
 
-function EditInline({ initial, onCancel, onSave }) {
-  const [val, setVal] = useState(initial);
+// function EditInline({ initial, onCancel, onSave }) {
+//   const [val, setVal] = useState(initial);
 
-  useEffect(() => {
-    setVal(initial);
-  }, [initial]);
+//   useEffect(() => {
+//     setVal(initial);
+//   }, [initial]);
 
-  function handleKey(e) {
-    if (e.key === "Escape") onCancel();
-    if (e.key === "Enter") onSave(val);
-  }
+//   function handleKey(e) {
+//     if (e.key === "Escape") onCancel();
+//     if (e.key === "Enter") onSave(val);
+//   }
 
-  return (
-    <div style={{ display: "flex", gap: ".5rem", width: "100%" }}>
-      <input
-        value={val}
-        onChange={(e) => setVal(e.target.value)}
-        onKeyDown={handleKey}
-        aria-label="Edit item"
-        autoFocus
-      />
-      <button type="button" className="btn" onClick={() => onSave(val)}>
-        <span className="material-symbols-outlined" aria-hidden>
-          save
-        </span>
-        Save
-      </button>
-    </div>
-  );
-}
+//   return (
+//     <div style={{ display: "flex", gap: ".5rem", width: "100%" }}>
+//       <input
+//         value={val}
+//         onChange={(e) => setVal(e.target.value)}
+//         onKeyDown={handleKey}
+//         aria-label="Edit item"
+//         autoFocus
+//       />
+//       <button type="button" className="btn" onClick={() => onSave(val)}>
+//         <span className="material-symbols-outlined" aria-hidden>
+//           save
+//         </span>
+//         Save
+//       </button>
+//     </div>
+//   );
+// }
