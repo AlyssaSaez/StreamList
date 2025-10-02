@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import EditInline from "../components/EditInline";
 import useLocalStorage from "../hooks/useLocalStorage";
 
@@ -8,13 +8,18 @@ function uid() {
 
 export default function StreamList() {
   const [item, setItem] = useState("");
-
   const [items, setItems] = useLocalStorage("streamlist-items", []);
 
   const remaining = useMemo(
     () => items.filter((i) => !i.completed).length,
     [items]
   );
+
+  // 🔔 Whenever items change, update localStorage and notify other components
+  useEffect(() => {
+    localStorage.setItem("streamlist-cart", JSON.stringify(items));
+    window.dispatchEvent(new Event("cart:updated"));
+  }, [items]);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -206,34 +211,3 @@ export default function StreamList() {
     </section>
   );
 }
-
-// function EditInline({ initial, onCancel, onSave }) {
-//   const [val, setVal] = useState(initial);
-
-//   useEffect(() => {
-//     setVal(initial);
-//   }, [initial]);
-
-//   function handleKey(e) {
-//     if (e.key === "Escape") onCancel();
-//     if (e.key === "Enter") onSave(val);
-//   }
-
-//   return (
-//     <div style={{ display: "flex", gap: ".5rem", width: "100%" }}>
-//       <input
-//         value={val}
-//         onChange={(e) => setVal(e.target.value)}
-//         onKeyDown={handleKey}
-//         aria-label="Edit item"
-//         autoFocus
-//       />
-//       <button type="button" className="btn" onClick={() => onSave(val)}>
-//         <span className="material-symbols-outlined" aria-hidden>
-//           save
-//         </span>
-//         Save
-//       </button>
-//     </div>
-//   );
-// }

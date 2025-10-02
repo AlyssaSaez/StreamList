@@ -118,19 +118,24 @@ export default function Movies() {
                   onClick={() => {
                     const raw = localStorage.getItem("streamlist-items");
                     const current = raw ? JSON.parse(raw) : [];
+
                     const exists = current.some((x) => x.tmdb_id === m.id);
                     if (!exists) {
-                      current.unshift({
-                        id: Math.random().toString(36).slice(2, 9),
-                        text: m.title,
-                        completed: false,
-                        editing: false,
-                        tmdb_id: m.id,
-                      });
-                      localStorage.setItem(
-                        "streamlist-items",
-                        JSON.stringify(current)
-                      );
+                      const next = [
+                        {
+                          id: Math.random().toString(36).slice(2, 9),
+                          text: m.title,
+                          completed: false,
+                          editing: false,
+                          tmdb_id: m.id,
+                        },
+                        ...current,
+                      ];
+
+                      localStorage.setItem("streamlist-items", JSON.stringify(next));
+                      localStorage.setItem("streamlist-cart", JSON.stringify(next));
+                      window.dispatchEvent(new Event("cart:updated"));
+
                       alert(`Added “${m.title}” to StreamList`);
                     } else {
                       alert("Already in your StreamList");
