@@ -16,8 +16,24 @@ export function setCart(items) {
   window.dispatchEvent(new Event(CART_EVENT)); // live-update navbar
 }
 
-export function addToCart(item) {
+export function getSubscription() {
+  return getCart().find((c) => c.kind === "subscription");
+}
+
+export function hasSubscription() {
+  return Boolean(getSubscription());
+}
+
+export function addToCart(item, opts = {}) {
   const cart = getCart();
+  // Enforce: only one subscription at a time
+  if (item.kind === "subscription") {
+    const filtered = cart.filter((c) => c.kind !== "subscription");
+    filtered.unshift({ ...item, qty: 1 }); // subs are always qty=1
+    return setCart(filtered);
+  }
+
+  // Accessories / other items can stack
   const idx = cart.findIndex((c) => c.id === item.id && c.kind === item.kind);
   if (idx >= 0) {
     cart[idx].qty = (cart[idx].qty || 1) + (item.qty || 1);
@@ -33,8 +49,9 @@ export function removeFromCart(id, kind) {
 }
 
 export function updateQty(id, kind, qty) {
+  const q = Math.max(1, Number(qty) || 1);
   const cart = getCart().map((c) =>
-    c.id === id && c.kind === kind ? { ...c, qty: Math.max(1, qty) } : c
+    c.id === id && c.kind === kind ? { ...c, qty: q } : c
   );
   setCart(cart);
 }

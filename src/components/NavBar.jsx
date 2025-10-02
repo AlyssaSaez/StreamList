@@ -43,6 +43,16 @@ export default function NavBar() {
           Home
         </NavLink>
         <NavLink
+          to="/watchlist"
+          className={linkClass}
+          onClick={() => setOpen(false)}
+        >
+          <span className="material-symbols-outlined" aria-hidden>
+            playlist_add
+          </span>
+          Watch List
+        </NavLink>
+        <NavLink
           to="/movies"
           className={linkClass}
           onClick={() => setOpen(false)}
